@@ -8,7 +8,8 @@ import (
 
 	"gorm.io/gorm/callbacks"
 
-	_ "github.com/glebarez/go-sqlite"
+	gosqlite "github.com/glebarez/go-sqlite"
+	sqlite3 "modernc.org/sqlite/lib"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -195,6 +196,19 @@ func (dialectopr Dialector) SavePoint(tx *gorm.DB, name string) error {
 func (dialectopr Dialector) RollbackTo(tx *gorm.DB, name string) error {
 	tx.Exec("ROLLBACK TO SAVEPOINT " + name)
 	return nil
+}
+
+func (dialector Dialector) Translate(err error) error {
+	switch terr := err.(type) {
+	case *gosqlite.Error:
+		switch terr.Code() {
+		case sqlite3.SQLITE_CONSTRAINT_UNIQUE:
+			return gorm.ErrDuplicatedKey
+		case sqlite3.SQLITE_CONSTRAINT_PRIMARYKEY:
+			return gorm.ErrDuplicatedKey
+		}
+	}
+	return err
 }
 
 func compareVersion(version1, version2 string) int {

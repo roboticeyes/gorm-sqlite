@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/glebarez/go-sqlite v1.21.1
 	gorm.io/gorm v1.25.0
+	modernc.org/sqlite v1.21.1
 )
 
 require (
@@ -18,5 +19,4 @@ require (
 	modernc.org/libc v1.22.3 // indirect
 	modernc.org/mathutil v1.5.0 // indirect
 	modernc.org/memory v1.5.0 // indirect
-	modernc.org/sqlite v1.21.1 // indirect
 )
